@@ -1,4 +1,4 @@
-# Algorith Group Project
+# Algorithm Group Project
 
-To read Jupyter Notebook online
+
 
