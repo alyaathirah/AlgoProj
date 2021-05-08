@@ -12,7 +12,7 @@ The details of the courier companies and their delivery hubs are given
 import pandas as pd
 import gmplot
 from IPython.display import IFrame
-API_key = 'AIzaSyBeaEjFijMcS1c_Zq4j8p_Wpdd0bpfpsaU'
+API_key = '****'
 
 deliveryHub = pd.read_csv('AlgorithmDataCourier.csv')
 deliveryHub['Latitude'][0]
