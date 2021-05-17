@@ -11,6 +11,11 @@ class Website():
 
     def __init__(self, url):
         self.url = url
+        self.title = ""
+        self.textArr = []
+        self.positive = []
+        self.negative = []
+        self.neutral = []
 
     def read(self):
         page = requests.get(self.url)
@@ -19,8 +24,8 @@ class Website():
         self.title = soup.find("title")
         self.title = self.title.text.strip()
 
-        text = soup.find("article")
-        text = text.text.strip()
+        t = soup.find("article")
+        text = t.text.strip()
 
         text = text.replace("\t", " ")
         text = text.replace("\n", " ")
