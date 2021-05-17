@@ -8,6 +8,7 @@ class Website():
     positive = []
     negative = []
     neutral = []
+    stop = []
 
     def __init__(self, url):
         self.url = url
@@ -16,6 +17,7 @@ class Website():
         self.positive = []
         self.negative = []
         self.neutral = []
+        self.stop = []
 
     def read(self):
         page = requests.get(self.url)
@@ -44,26 +46,32 @@ class Website():
         stopword = str.split('\n')
         for i in range(len(stopword)):
             try:
-                text.remove(stopword[i])
                 while True: #the loop stop when it encounters error anyway
                     text.remove(stopword[i])
+                    self.stop.append(stopword[i])
+
             except:
                 continue
+
         self.textArr = text #return cleaned array
 
     def Print(self):
         print()
         print("Article:", self.title)
-        print("Positive:")
+        print("Positive:", end="")
         for i in self.positive:
             print(i, end=",")
         print()
-        print("Negative:")
+        print("Negative:", end="")
         for i in self.negative:
             print(i, end=",")
         print()
         print("Positive Words Count:", len(self.positive))
         print("Negative Words Count:",len(self.negative))
+
+        print("Stopwords:", end="")
+        for i in self.stop:
+            print(i, end=",")
 
     def PosiNeg(self):
         #positive words store
