@@ -1,0 +1,189 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "d5eda14a",
+   "metadata": {},
+   "source": [
+    "## Problem 4 "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "59eb0b54",
+   "metadata": {},
+   "source": [
+    "Assuming that video or audio from the news or customer feedback will be used to provide sentiment insights in the future, Dynamic Time Warping (DTW) is one of the algorithms that can potentially be used. Explain the concept of DTW and demonstrate the implementation of DTW in analysing a video or an audio. For example, given the following video (https://www.youtube.com/watch?v=ZwVFj8CfFeE), identify some words, for example “J&T”, “memohon” and “maaf”."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "dfd9b966",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'Kami daripada jnt Express Perak Kebelakangan ini telah tulah satu video di media sosial tentang pekerja tidak mengikuti esok dan mencampak barang ketemu kami ingin memohon maaf dan kami ingin menjelaskan bahawa tiada isu dalaman ataupun potongan gaji antara pihak syarikat dan pekerja jnt Express Perak kami ingin menjelaskan bahawa kami tidak ada melakukan tindakan mogok kami ingin sekali lagi memohon maaf kerana telah menjejaskan nama pihak syarikat dan menjejaskan Para malaikat memohon maaf kepada semua yang tampil memberikan penjelasan mengenai penangguhan potongan gaji kecurian bungkusan kendalian syarikatnya dalam satu surat terbuka di Facebook syarikat tu menjelaskan pengajian bungkusan segala yang berlaku pada Khamis lalu disebabkan terdapat segelintir pekerjanya tidak memahami dengan jelas sistem Han bonus dalam kalangan pegawai jabatan jelasnya memberikan pembayaran pekerja akhir tahun selepas membuat pertimbangan koperatif bersesuaian dengan peraturan dan undang undang undang undang-undang perburuhan Malaysia tambahnya pengurusan negeri Perak segera menangani dan menjelaskan keadaan sebenar yang berlaku iaitu pada 5 Februari iaitu Jumaat lalu pekerja kembali jalankan tugas seperti biasa untuk menyusun serta memproses bungkusan pelanggan'"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import speech_recognition as sr\n",
+    "\n",
+    "r = sr.Recognizer()\n",
+    "filename = \"JT beri penjelasan memohon maaf.wav\"\n",
+    "\n",
+    "with sr.AudioFile(filename) as source:\n",
+    "    # listen for the data (load audio to memory)\n",
+    "    audio_data = r.listen(source)     \n",
+    "    # recognize (convert from speech to text)\n",
+    "    text = r.recognize_google(audio_data, language = \"ms-MY\")\n",
+    "\n",
+    "text"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "8a06278c",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Kami', 'daripada', 'jnt', 'Express', 'Perak', 'Kebelakangan', 'ini', 'telah', 'tulah', 'satu', 'video', 'di', 'media', 'sosial', 'tentang', 'pekerja', 'tidak', 'mengikuti', 'esok', 'dan', 'mencampak', 'barang', 'ketemu', 'kami', 'ingin', 'memohon', 'maaf', 'dan', 'kami', 'ingin', 'menjelaskan', 'bahawa', 'tiada', 'isu', 'dalaman', 'ataupun', 'potongan', 'gaji', 'antara', 'pihak', 'syarikat', 'dan', 'pekerja', 'jnt', 'Express', 'Perak', 'kami', 'ingin', 'menjelaskan', 'bahawa', 'kami', 'tidak', 'ada', 'melakukan', 'tindakan', 'mogok', 'kami', 'ingin', 'sekali', 'lagi', 'memohon', 'maaf', 'kerana', 'telah', 'menjejaskan', 'nama', 'pihak', 'syarikat', 'dan', 'menjejaskan', 'Para', 'malaikat', 'memohon', 'maaf', 'kepada', 'semua', 'yang', 'tampil', 'memberikan', 'penjelasan', 'mengenai', 'penangguhan', 'potongan', 'gaji', 'kecurian', 'bungkusan', 'kendalian', 'syarikatnya', 'dalam', 'satu', 'surat', 'terbuka', 'di', 'Facebook', 'syarikat', 'tu', 'menjelaskan', 'pengajian', 'bungkusan', 'segala', 'yang', 'berlaku', 'pada', 'Khamis', 'lalu', 'disebabkan', 'terdapat', 'segelintir', 'pekerjanya', 'tidak', 'memahami', 'dengan', 'jelas', 'sistem', 'Han', 'bonus', 'dalam', 'kalangan', 'pegawai', 'jabatan', 'jelasnya', 'memberikan', 'pembayaran', 'pekerja', 'akhir', 'tahun', 'selepas', 'membuat', 'pertimbangan', 'koperatif', 'bersesuaian', 'dengan', 'peraturan', 'dan', 'undang', 'undang', 'undang', 'undang-undang', 'perburuhan', 'Malaysia', 'tambahnya', 'pengurusan', 'negeri', 'Perak', 'segera', 'menangani', 'dan', 'menjelaskan', 'keadaan', 'sebenar', 'yang', 'berlaku', 'iaitu', 'pada', '5', 'Februari', 'iaitu', 'Jumaat', 'lalu', 'pekerja', 'kembali', 'jalankan', 'tugas', 'seperti', 'biasa', 'untuk', 'menyusun', 'serta', 'memproses', 'bungkusan', 'pelanggan']\n"
+     ]
+    }
+   ],
+   "source": [
+    "#split the text to array\n",
+    "splitText = text.split()\n",
+    "print(splitText)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "34fc61f5",
+   "metadata": {},
+   "source": [
+    "### DTW Algorithm"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7b7c7557",
+   "metadata": {},
+   "source": [
+    "Computes Dynamic Time Warping (DTW) of two sequences.\n",
+    "\n",
+    ":param array x: N1*M array <br>\n",
+    ":param array y: N2*M array <br>\n",
+    ":param func dist: distance used as cost measure <br>\n",
+    "\n",
+    "Returns the minimum distance, the cost matrix, the accumulated cost matrix, and the wrap path.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "0b8166f0",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from numpy import array, zeros, argmin, inf, equal, ndim\n",
+    "#Compute distance between each pair of the two collections of inputs.\n",
+    "from scipy.spatial.distance import cdist\n",
+    "\n",
+    "def dtw(x, y, dist):\n",
+    "    assert len(x)  # Report error while x is none\n",
+    "    assert len(y)\n",
+    "    r, c = len(x), len(y)\n",
+    "    D0 = zeros((r + 1, c + 1))\n",
+    "    D0[0, 1:] = inf\n",
+    "    D0[1:, 0] = inf\n",
+    "    D1 = D0[1:, 1:] # view\n",
+    "\n",
+    "    for i in range(r):\n",
+    "        for j in range(c):\n",
+    "            D1[i, j] = dist(x[i], y[j])\n",
+    "    C = D1.copy()\n",
+    "\n",
+    "    for i in range(r):\n",
+    "        for j in range(c):\n",
+    "            D1[i, j] += min(D0[i, j], D0[i, j+1], D0[i+1, j])\n",
+    "    if len(x)==1:\n",
+    "        path = zeros(len(y)), range(len(y))\n",
+    "    elif len(y) == 1:\n",
+    "        path = range(len(x)), zeros(len(x))\n",
+    "    else:\n",
+    "        path = _traceback(D0)\n",
+    "    return D1[-1, -1] / sum(D1.shape), C, D1, path\n",
+    "\n",
+    "def _traceback(D):\n",
+    "    i, j = array(D.shape) - 2\n",
+    "    p, q = [i], [j]\n",
+    "    while ((i > 0) or (j > 0)):\n",
+    "        tb = argmin((D[i, j], D[i, j+1], D[i+1, j]))\n",
+    "        if (tb == 0):\n",
+    "            i -= 1\n",
+    "            j -= 1\n",
+    "        elif (tb == 1):\n",
+    "            i -= 1\n",
+    "        else: # (tb == 2):\n",
+    "            j -= 1\n",
+    "        p.insert(0, i)\n",
+    "        q.insert(0, j)\n",
+    "    return array(p), array(q)\n",
+    "\n",
+    "if __name__ == '__main__':\n",
+    "    from nltk.metrics.distance import edit_distance\n",
+    "    x = splitText\n",
+    "    y = ['jnt', 'meminta', 'maaf']\n",
+    "    dist_fun = edit_distance\n",
+    "    dist, cost, acc, path = dtw(x, y, dist_fun)\n",
+    "\n",
+    "    # vizualize\n",
+    "    from matplotlib import pyplot as plt\n",
+    "    plt.imshow(cost.T, origin='lower', cmap=plt.cm.Reds, interpolation='nearest', aspect='auto')\n",
+    "    plt.plot(path[0], path[1], '-o') # relation\n",
+    "    plt.xticks(range(len(x)), x)\n",
+    "    plt.yticks(range(len(y)), y)\n",
+    "    plt.xlabel('x')\n",
+    "    plt.ylabel('y')\n",
+    "    plt.axis('tight')\n",
+    "    plt.rcParams[\"figure.figsize\"] = (30,20)\n",
+    "    plt.title('Minimum distance: {}'.format(dist))\n",
+    "    plt.show()\n",
+    "    "
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
