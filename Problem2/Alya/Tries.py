@@ -37,12 +37,12 @@ class Tries():
             num=i
             for j in range(len(currentLetter.children)):
                 if (text[i] == currentLetter.children[j].letter):
-                    currentLetter = currentLetter.children[j]
+                    currentLetter = currentLetter.children[j] #replace with child
                     #print(currentLetter.letter, end="")
                     break
-                if (j == len(currentLetter.children)-1):
+                if (j == len(currentLetter.children)-1): #reach the end already
                     return False
-            if currentLetter.lastLeaf == True and (num == len(text)-1):
+            if currentLetter.lastLeaf == True and (num == len(text)-1): #reach end and last leaf == true
                 return True
 
         return False #Word does not exist
